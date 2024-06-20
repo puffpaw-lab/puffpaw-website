@@ -1,0 +1,47 @@
+.num-change-provider {
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  @keyframes time-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(50%);
+    }
+  }
+  @keyframes time-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-50%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .current {
+    position: relative;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .next {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  &.start {
+    .current {
+      animation-name: time-out;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+    .next {
+      animation-name: time-in;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+  }
+}

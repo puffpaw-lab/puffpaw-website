@@ -1,0 +1,37 @@
+.collspan {
+  .collspan-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > span {
+      font-size: 0.875rem;
+    }
+    > div {
+      cursor: pointer;
+      > svg {
+        height: 1.5rem;
+      }
+    }
+  }
+  .collspan-wrapper {
+    transform-origin: top;
+    overflow-y: hidden;
+    transition: all 0.3s ease;
+    display: grid;
+    .collspan-content {
+      overflow-y: hidden;
+    }
+  }
+  &.on {
+    .collspan-wrapper {
+      margin-top: 0.625rem;
+      grid-template-rows: 1fr;
+    }
+  }
+  &.off {
+    .collspan-wrapper {
+      margin-top: 0rem;
+      grid-template-rows: 0fr;
+    }
+  }
+}
