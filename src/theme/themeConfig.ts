@@ -7,11 +7,11 @@
  * - sm: 宽屏手机 低于此分辨率更换为 H5布局
  * - xs: 手机宽度 设计图手机宽度
  */
-export const MediaWidth = {
-  maxl: 1920,
-  mxl: 1440,
-  xl: 1024,
-  md: 1024,
-  sm: 540,
-  xs: 390,
-};
+export enum MediaWidth {
+  maxl = 1920,
+  mxl = 1440,
+  xl = 1000,
+  md = 720,
+  sm = 540,
+  xs = 390,
+}

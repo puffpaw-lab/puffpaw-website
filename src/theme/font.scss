@@ -1,12 +1,30 @@
 @font-face {
+  font-family: "lota-light";
+  src: url("@/theme/fonts/lotagrotesquealt3-light.otf");
+  font-weight: lighter;
+  font-style: normal;
+}
+@font-face {
   font-family: "lota-regular";
   src: url("@/theme/fonts/lotagrotesquealt3-regular.otf");
   font-weight: regular;
   font-style: normal;
 }
 @font-face {
+  font-family: "lota-Bold";
+  src: url("@/theme/fonts/Los Andes  Lota Grotesque Alt 3 Bold.otf");
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
   font-family: "abc-regular";
   src: url("@/theme/fonts/ABCMaxiSharp-Regular.otf");
   font-weight: regular;
+  font-style: normal;
+}
+@font-face {
+  font-family: "abc-bold";
+  src: url("@/theme/fonts/ABCMaxiSharp-Bold.otf");
+  font-weight: bold;
   font-style: normal;
 }

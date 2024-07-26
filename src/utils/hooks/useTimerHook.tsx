@@ -3,25 +3,31 @@ import { useEffect, useState } from "react";
 
 type params = Parameters<typeof useInViewport>;
 
+const targetTime = 0; //倒计时目标时间戳 单位s
+const isTimeStart = false; //倒计时是否开始
+
 /**倒计时
  * @param target 监听组件，移出视野停止计时
  * @param targetTime 倒计时时间 单位s
  * @param option 监听组件配置 useInViewport 配置
+ * @param forceStart 是否强制开始倒计时
  */
 export default function useTimerHook(
   target: params[0],
-  targetTime?: number,
-  option?: params[1]
+  option?: params[1],
+  forceStart: boolean = false
 ) {
   const [inViewPort] = useInViewport(target, option); //添加监听器，不在可视范围内不给计时
   const [isTimeEnd, setIsTimeEnd] = useBoolean(false); //倒计时是否结束
 
   const [d, setD] = useState(0);
-  const [dd, setDD] = useState(1);
-  const [h, setH] = useState(1);
-  const [hh, setHH] = useState(2);
+  const [dd, setDD] = useState(0);
+  const [h, setH] = useState(0);
+  const [hh, setHH] = useState(0);
   const [m, setM] = useState(0);
   const [mm, setMM] = useState(0);
+  const [s, setS] = useState(0);
+  const [ss, setSS] = useState(0);
   const [interval, setInterval] = useState<number>();
 
   /**没有最终时间，展示倒计时动画 */
@@ -48,6 +54,8 @@ export default function useTimerHook(
     if (nowTime >= targetTime) {
       setIsTimeEnd.setTrue();
       setInterval(undefined);
+      setS(0);
+      setSS(0);
       setM(0);
       setMM(0);
       setH(0);
@@ -56,11 +64,24 @@ export default function useTimerHook(
       setDD(0);
       return;
     }
-    //计算倒计时 --临时
-    const time = targetTime - nowTime;
-    const durationS = Math.floor(time % 60);
-    setM(Math.floor(durationS / 10));
-    setMM(durationS % 10);
+    //计算倒计时
+    const durationTime = targetTime - nowTime;
+    const day = (durationTime / 86400) | 0;
+    const hourTime = durationTime % 86400;
+    const hour = (hourTime / 3600) | 0;
+    const minuteTime = hourTime % 3600;
+    const minute = (minuteTime / 60) | 0;
+    const secondTime = minuteTime % 60;
+    const second = secondTime | 0;
+    //赋值
+    setD((day / 10) | 0);
+    setDD(day % 10);
+    setH((hour / 10) | 0);
+    setHH(hour % 10);
+    setM((minute / 10) | 0);
+    setMM(minute % 10);
+    setS((second / 10) | 0);
+    setSS(second % 10);
   });
 
   /**计算当前时间 */
@@ -74,13 +95,19 @@ export default function useTimerHook(
 
   //监听器控制定时器
   useEffect(() => {
+    //倒计时未开始，定时器关闭
+    if (!forceStart && !isTimeStart) {
+      setInterval(undefined);
+      return;
+    }
+    //倒计时开始，根据视窗开关定时器
     if (inViewPort && !isTimeEnd) {
       setInterval(3000);
       caculateTime();
     } else {
       setInterval(undefined);
     }
-  }, [caculateTime, inViewPort, isTimeEnd]);
+  }, [caculateTime, inViewPort, isTimeEnd, forceStart]);
 
   useInterval(() => {
     caculateTime();
@@ -93,6 +120,9 @@ export default function useTimerHook(
     hh,
     m,
     mm,
+    s,
+    ss,
     isTimeEnd,
+    isTimeStart,
   };
 }

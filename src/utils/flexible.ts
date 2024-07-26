@@ -16,9 +16,10 @@ type BreakPoints = BreakPoint[];
 
 const docEl = window.document.documentElement;
 const breakPoints: BreakPoints = [
-  [MediaWidth.xs, MediaWidth.sm],
-  [MediaWidth.mxl, MediaWidth.maxl],
-];
+  [MediaWidth.md, MediaWidth.md],
+  [MediaWidth.xl, MediaWidth.mxl],
+]; // 响应式节点
+const minScale = 100; // 最小缩放倍数，用于判断响应式节点
 
 // 调整全局字体大小
 // 此函数需要自己根据项目需求进行调整
@@ -46,9 +47,12 @@ function setRemUnit() {
       // 缩小
       rem = (docEl.clientWidth * 100) / breakPoints[i][0];
       // 小于预设直接进入下一阶段
-      if (rem < 62.5) {
-        rem = 62.5;
+      if (breakPoints[i - 1] && rem < minScale) {
         continue;
+      }
+      //最小62.5
+      if (rem < 31.25) {
+        rem = 31.25;
       }
       break;
     }

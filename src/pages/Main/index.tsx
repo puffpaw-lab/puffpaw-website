@@ -7,58 +7,71 @@ import Clock from "./Clock";
 import CloudLine from "./CloudLine";
 import Description from "./Description";
 import Tweets from "./Tweets";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Partners from "./Partners";
-import Team from "./Team";
+// import Team from "./Team";
 import Roadmap from "./Roadmap";
 import Top from "./Top";
-import CloudsProvider from "./CloudsProvider";
 import { useLocation } from "react-router-dom";
+import { useDebounceFn, useSize, useToggle } from "ahooks";
+import Title from "./Title";
 
 export default function Main() {
   const { key } = useLocation();
+  const [visible, setVisible] = useToggle<"hidden", "visible">(
+    "hidden",
+    "visible"
+  );
+  const size = useSize(document.querySelector("body"));
+  const [innderHeight, setInnerHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    setInnerHeight(window.innerHeight);
+  }, [size]);
+
+  const { run: onload } = useDebounceFn(() => {
+    if (window.bs) {
+      (window.bs as BScrollConstructor).refresh();
+      (window.bs as BScrollConstructor).scrollToElement(
+        ".main-bottom-space",
+        0,
+        false,
+        false
+      );
+      setVisible.setRight();
+    }
+  });
 
   //初次加载跳转到页面底部
   useEffect(() => {
-    const onload = () => {
-      if (window.bs) {
-        (window.bs as BScrollConstructor).scrollToElement(
-          ".main-bottom-space",
-          0,
-          false,
-          false
-        );
-      }
-    };
-    setTimeout(onload, 0);
+    setTimeout(onload);
   }, [key]);
 
   return (
-    <div className="main-wrapper">
+    <div
+      className="main-wrapper"
+      style={{
+        height: innderHeight,
+      }}
+    >
       <BetterScrollProvider>
-        <div className="main">
+        <div
+          className="main"
+          style={{
+            visibility: visible,
+          }}
+        >
           <div className="main-bottom-space"></div>
           <Puffpaw />
           <Clock />
           <CloudLine />
-          <CloudsProvider>
-            <Description />
-          </CloudsProvider>
+          <Description />
           <Tweets />
-          <CloudsProvider cloudNum={3}>
-            <Partners />
-          </CloudsProvider>
-          <Team />
-          <CloudsProvider>
-            <CloudsProvider
-              cloudNum={2}
-              cloudColor="#F5F5F7"
-              cloudInvterval={9500}
-            >
-              <Roadmap />
-            </CloudsProvider>
-          </CloudsProvider>
+          <Partners />
+          {/* <Team /> */}
+          <Roadmap />
           <Top />
+          <Title />
         </div>
       </BetterScrollProvider>
       <Anchor />

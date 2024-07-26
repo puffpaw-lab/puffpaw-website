@@ -1,74 +1,156 @@
+@use "../../theme/theme.module.scss" as theme;
 @import url("../../theme/font.scss");
 
 $primary-color: #020202;
 $second-primary-color: #ff4c33;
-$font-color: #e6ebec;
+$font-color: #f5f5f7;
 $wrapper-width: min(90rem, 100vw);
-$content-width: min(calc(100vw - 2.5rem), 77.5rem);
-$letter-spacing: -0.02rem;
+$content-width: min(calc(100vw - 3rem), 77.5rem);
+/**闪烁动画 */
+@keyframes twinkle {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/**波浪起伏动画 */
+@keyframes wave {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(1rem);
+  }
+}
 
 .main-wrapper {
   background-color: $primary-color;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  letter-spacing: $letter-spacing;
+  letter-spacing: -0.02rem;
   line-height: 1.2;
   color: $font-color;
   font-family: lota-regular;
+  overflow: hidden;
 }
 /** 底部锚点 */
 .main-anchor {
   background-color: #f5f5f7;
-  position: fixed;
-  bottom: 1.25rem;
-  width: calc($content-width - 1.5rem);
-  padding: 0.75rem;
-  border-radius: 0.5rem;
+  width: 100vw;
+  padding: 1rem 0 1.5rem 0;
   border: solid 1px $primary-color;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  .main-anchor-content {
+  position: relative;
+  .tooptip.ant-tooltip {
+    .ant-tooltip-arrow::before {
+      background: $second-primary-color;
+    }
+    .ant-tooltip-inner {
+      background-color: $second-primary-color;
+      padding: 0.75rem 1.25rem;
+      border-radius: 1.5rem;
+      font-size: 1rem;
+      font-family: lota-regular;
+    }
+  }
+  .content {
+    width: $content-width;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 1.75rem;
     .item {
       display: flex;
       align-items: center;
-      gap: 0.625rem;
-      > a {
-        font-size: 1rem;
-        text-decoration: none;
+      gap: 2rem;
+      .list {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        > a {
+          font-size: 1rem;
+          text-decoration: none;
+          color: $primary-color;
+          &:hover {
+            color: $second-primary-color;
+          }
+        }
+      }
+      .button {
+        border-radius: 200px;
+        border: solid 1px $primary-color;
+        padding: 0.5rem 1.25rem;
         color: $primary-color;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        font-family: lota-regular;
+        &:hover {
+          border-color: $second-primary-color;
+          background-color: $second-primary-color;
+          color: $font-color;
+          > svg {
+            > path {
+              fill: $font-color;
+              stroke: $font-color;
+            }
+          }
+        }
+      }
+      .menu {
+        position: absolute;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba($color: $primary-color, $alpha: 0.8);
+        display: flex;
+        flex-direction: column-reverse;
+        &.on {
+          bottom: 100%;
+        }
+        &.off {
+          bottom: -100vh;
+        }
+        .menu-item {
+          background-color: #101010;
+          font-size: 3rem;
+          line-height: 3.6rem;
+          font-weight: 400;
+          padding: 1.5rem;
+          display: flex;
+          align-items: center;
+          gap: 0.625rem;
+          cursor: pointer;
+          > span {
+            opacity: 0.2;
+          }
+          > a {
+            width: 100%;
+            color: $font-color;
+            text-decoration: none;
+          }
+        }
+        .divider {
+          margin: 0 1.5rem;
+          border-bottom: 1px solid #222222;
+        }
       }
     }
-  }
-  .button {
-    border-radius: 200px;
-    border: solid 1px $primary-color;
-    padding: 0.5rem 1.25rem;
-    color: $primary-color;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    cursor: pointer;
   }
 }
 
 .main {
   width: 100vw;
-  min-height: 100vh;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
   position: relative;
-  .main-bottom-space {
-    height: 7.25rem;
-  }
 }
 
 /**背景云 */
@@ -101,18 +183,59 @@ $letter-spacing: -0.02rem;
   }
 }
 
+/**底部标题 */
+.main-puffpaw {
+  width: $content-width;
+  .tip {
+    font-size: 2rem;
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    > span {
+      animation: 1s ease-in-out infinite alternate twinkle;
+    }
+    @media screen and (max-width: theme.$xl) {
+      font-size: 1.125rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+    }
+  }
+}
+
 /**时钟 */
 .main-clock {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 1.75rem;
-  margin-bottom: 5rem;
-  .clock-title {
-    width: 27.5rem;
-    font-size: 2rem;
-    text-align: center;
+  margin-bottom: 3rem;
+  .clock-gif {
+    width: min(56.6669rem, $content-width);
   }
+  .clock-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .clock-title {
+      width: 27.5rem;
+      font-size: 2.25rem;
+      font-family: lota-Bold;
+      text-align: center;
+      @media screen and (max-width: theme.$xl) {
+        width: $content-width;
+        font-size: 3rem;
+      }
+    }
+    .clock-tip {
+      font-size: 1.125rem;
+      text-align: center;
+      margin-top: 0.875rem;
+      opacity: 0.26;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 2rem;
+      }
+    }
+  }
+
   .clock-content {
     border-radius: 1.25rem;
     background-color: $second-primary-color;
@@ -126,27 +249,43 @@ $letter-spacing: -0.02rem;
       background-color: $primary-color;
       font-size: 5rem;
       line-height: 0.9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      &.no-start {
+        width: 12.5rem;
+        height: 9.5rem;
+        padding: 0;
+        > img {
+          height: 100%;
+        }
+      }
     }
-  }
-  .clock-tip {
-    font-size: 1.125rem;
-    text-align: center;
-  }
-  .clock-action {
-    > button {
-      border-radius: 200px;
-      border: solid 1px $primary-color;
-      padding: 1rem 2.5rem;
-      color: $primary-color;
-      font-size: 1.75rem;
+    .action {
+      grid-column: span 3;
+      background-color: $primary-color;
+      border-radius: 4.6875rem;
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-      font-family: lota-regular;
+      gap: 0.5rem;
+      padding: 0.25rem 1rem 0.25rem 0.25rem;
+      > button {
+        width: 100%;
+        border-radius: 200px;
+        border: solid 1px $primary-color;
+        padding: 1.5rem 2.5rem;
+        color: $primary-color;
+        font-size: 1.75rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        font-family: lota-regular;
+      }
+      > span {
+        word-break: keep-all;
+        white-space: nowrap;
+        font-family: lota-Bold;
+        font-size: 1.25rem;
+      }
     }
   }
 }
@@ -155,94 +294,249 @@ $letter-spacing: -0.02rem;
 .main-cloud-line {
   width: $wrapper-width;
   position: relative;
-  margin-top: 6.25rem;
-  .content {
-    $bg-width: 98.875rem;
-    @keyframes scroll {
-      from {
-        transform: translateX(calc($wrapper-width - 100vw));
-      }
-      to {
-        transform: translateX(calc($wrapper-width - $bg-width - 100vw));
-      }
-    }
-    white-space: nowrap;
-    animation: scroll 50s linear infinite;
-    .bg {
-      width: $bg-width;
-      position: relative;
-      display: inline-block;
-    }
+  margin-top: -5rem;
+  @media screen and (max-width: theme.$xl) {
+    margin-top: 4.375rem;
   }
-  .smoke {
-    position: absolute;
-    top: -5rem;
-    right: 8rem;
-    height: 20rem;
+  .content {
+    height: 37rem;
+    position: relative;
+    @media screen and (max-width: theme.$xl) {
+      height: 16rem;
+      margin-bottom: 6rem;
+    }
+    > svg {
+      width: 100%;
+      height: 50.7rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @media screen and (max-width: theme.$xl) {
+        height: 24rem;
+      }
+      > g {
+        animation: 1.8s ease-in-out infinite alternate wave;
+        &:last-child {
+          animation-delay: 1.8s;
+        }
+      }
+    }
   }
 }
 
 /**描述 */
 .main-description {
-  display: flex;
-  flex-direction: column;
-  gap: 3.75rem;
-  justify-content: center;
-  align-items: center;
-  > section {
-    span {
-      color: $second-primary-color;
+  width: $wrapper-width;
+  position: relative;
+  .clouds {
+    > img {
+      position: absolute;
     }
-    &:first-child {
-      width: 40rem;
-      font-size: 1.75rem;
-      text-align: center;
+    .cl1 {
+      top: 8%;
+      left: 0%;
+      width: 12.125rem;
     }
-    &:nth-child(2) {
-      width: 55rem;
-      height: 25rem;
-      border-radius: 1.25rem;
-      background-color: #f5f5f7;
-      text-align: center;
-      color: $primary-color;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.75rem;
+    .cl2 {
+      top: 30%;
+      left: 10%;
+      width: 5.75rem;
     }
-    &:nth-child(3) {
-      width: 40rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      align-items: center;
-      .title {
-        font-size: 1rem;
-        font-family: abc-regular;
-        text-transform: uppercase;
-      }
-      .content {
-        width: 30rem;
+    .cl3 {
+      top: 54%;
+      left: 0%;
+      width: 10.875rem;
+    }
+    .cl4 {
+      top: 77%;
+      left: 12%;
+      width: 5.75rem;
+    }
+    .cr1 {
+      top: 9%;
+      right: 1%;
+      width: 12.5rem;
+    }
+    .cr2 {
+      top: 24%;
+      right: 2%;
+      width: 14.3125rem;
+    }
+    .cr3 {
+      top: 80%;
+      right: 5%;
+      width: 14.1875rem;
+    }
+  }
+  .main-description-content {
+    display: flex;
+    flex-direction: column;
+    gap: 7.5rem;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    > section {
+      &:first-child {
+        width: min(48rem, $content-width);
         font-size: 1.75rem;
+        text-align: center;
+        .top {
+          margin-bottom: 5rem;
+          .action {
+            position: relative;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            @media screen and (max-width: theme.$xl) {
+              flex-direction: column;
+              gap: 1.5rem;
+            }
+            > a {
+              text-decoration: none;
+              border-radius: 200px;
+              box-shadow: 0 0 0px 0.6px $font-color;
+              padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+              color: $font-color;
+              background-color: transparent;
+              font-size: 1rem;
+              font-family: lota-Bold;
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              cursor: pointer;
+              white-space: nowrap;
+              > svg {
+                width: 2rem;
+                height: 2rem;
+                rect {
+                  fill: white;
+                }
+                path {
+                  fill: #020202;
+                }
+              }
+              @media screen and (max-width: theme.$xl) {
+                width: 18.5rem;
+                padding: 0.75rem;
+                font-size: 1.75rem;
+                box-sizing: border-box;
+                > svg {
+                  width: 2.5rem;
+                  height: 2.5rem;
+                }
+              }
+              &.discord {
+                background-color: $font-color;
+                color: $primary-color;
+                > svg {
+                  rect {
+                    fill: #020202;
+                  }
+                  path {
+                    fill: white;
+                  }
+                }
+              }
+              &:hover {
+                background-color: $second-primary-color;
+                color: $font-color;
+                box-shadow: 0 0 0px 0.6px $second-primary-color;
+                > svg {
+                  rect {
+                    fill: white;
+                  }
+                  path {
+                    fill: $second-primary-color;
+                  }
+                }
+              }
+            }
+          }
+          > span {
+            font-size: 1.75rem;
+            line-height: 2.1rem;
+            @media screen and (max-width: theme.$xl) {
+              font-size: 2rem;
+              line-height: 2.4rem;
+            }
+          }
+        }
+        .img {
+          width: 100%;
+          height: 43.5rem;
+          overflow: hidden;
+          position: relative;
+          .smoke-animation {
+            height: 110%;
+            transform: translateX(-50%);
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+          }
+        }
       }
-    }
-    &:last-child {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.25rem;
-      .title {
-        font-size: 1.25rem;
-        line-height: 1;
-      }
-      .content {
+      &:nth-child(2) {
+        width: min(48rem, $content-width);
+        text-align: center;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        gap: 1.25rem;
         align-items: center;
-        gap: 2.5rem;
-        > svg {
-          height: 1.5rem;
+        .title {
+          font-size: 1.75rem;
+          font-family: abc-bold;
+          opacity: 0.2;
+        }
+        .content {
+          font-size: 1.75rem;
+          > span {
+            color: $second-primary-color;
+          }
+        }
+        @media screen and (max-width: theme.$xl) {
+          gap: 2rem;
+          .title {
+            font-size: 2rem;
+          }
+          .content {
+            font-size: 2rem;
+          }
+        }
+      }
+      &:nth-child(3) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 0.75rem;
+        .title {
+          font-size: 1.75rem;
+          line-height: 1;
+          opacity: 0.2;
+          font-family: abc-bold;
+        }
+        .content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 4rem;
+          > svg {
+            height: 3.625rem;
+          }
+        }
+        @media screen and (max-width: theme.$xl) {
+          gap: 2rem;
+          .title {
+            font-size: 2rem;
+          }
+          .content {
+            > svg {
+              height: 4.5rem;
+            }
+          }
         }
       }
     }
@@ -253,7 +547,7 @@ $letter-spacing: -0.02rem;
 .main-tweets {
   width: $wrapper-width;
   height: 39.5rem;
-  margin-bottom: 6.25rem;
+  margin-bottom: 12rem;
   position: relative;
   .bg {
     position: absolute;
@@ -267,67 +561,131 @@ $letter-spacing: -0.02rem;
   .title {
     position: relative;
     text-align: center;
-    font-size: 2rem;
+    font-size: 4rem;
     line-height: 1;
     margin-bottom: 1em;
-    margin-top: 9.5rem;
+    margin-top: 1em;
+    font-family: abc-bold;
+  }
+  .content-wrapper {
+    position: relative;
+    width: $wrapper-width;
+    overflow: hidden;
+  }
+  @keyframes roll-animation {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
   }
   .content {
+    margin-top: 11rem;
+    display: inline-flex;
+    align-items: stretch;
+    gap: 1.25rem;
+    width: fit-content;
     position: relative;
+    animation: roll-animation 120s linear infinite;
+    animation-play-state: running;
+    &.hover {
+      animation-play-state: paused;
+    }
+    &:hover {
+      animation-play-state: paused;
+    }
     .item {
+      width: 25rem;
+      flex-shrink: 0;
+      cursor: pointer;
+      transform: translateY(0rem);
+      transition: transform 0.3s ease;
+      text-decoration: none;
+      @media screen and (min-width: theme.$xl) {
+        &:hover {
+          transform: translateY(-1.25rem);
+        }
+      }
+      &:first-child {
+        margin-left: 1.25rem;
+      }
+      &:last-child {
+        // margin-right: 1.25rem;
+      }
       .item-content {
         height: 100%;
-        margin: 0 0.625rem;
         padding: 1.25rem;
         box-sizing: border-box;
         border-radius: 1.25rem;
         background-color: $font-color;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: start;
         justify-content: space-between;
         gap: 1.25rem;
-        > img {
-          height: 5rem;
-          border-radius: 5rem;
-        }
-        .text {
-          text-align: center;
-          font-size: 1.125rem;
-          line-height: 1.2em;
-          height: 3.6em;
-        }
-        .name {
-          text-align: center;
-          .name-text {
-            font-size: 1.125rem;
-            line-height: 1;
+        .top {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 0.625rem;
+          > img {
+            height: 3.75rem;
+            border-radius: 5rem;
           }
-          .name-link {
-            > a {
-              font-size: 0.875rem;
-              color: $second-primary-color;
+          .name {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+            align-items: start;
+            overflow: hidden;
+            .name-text {
+              width: 100%;
+              color: $primary-color;
+              font-size: 1.625rem;
+              font-family: lota-Bold;
+              line-height: 1;
+              display: flex;
+              align-items: center;
+              gap: 0.25rem;
+              > span {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              > svg {
+                width: 1.75rem;
+                height: 1.75rem;
+              }
+            }
+            .name-link {
+              > span {
+                font-size: 1.125rem;
+                color: #acafb3;
+                font-weight: 400;
+              }
             }
           }
         }
+        .text {
+          font-size: 1.125rem;
+          font-weight: 400;
+          line-height: 1.2em;
+          height: 4.6em;
+          color: $primary-color;
+          > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            line-clamp: 4;
+            -webkit-line-clamp: 4;
+          }
+          span {
+            color: $second-primary-color;
+          }
+        }
       }
-    }
-  }
-  .action {
-    position: relative;
-    margin-top: 2rem;
-    > button {
-      margin: 0 auto;
-      border-radius: 200px;
-      border: solid 1px $font-color;
-      padding: 0.5rem 1.25rem;
-      color: $font-color;
-      background-color: transparent;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
     }
   }
 }
@@ -335,22 +693,22 @@ $letter-spacing: -0.02rem;
 /**合作伙伴 */
 .main-partners {
   width: $content-width;
-  margin-bottom: 5rem;
-  .title {
-    font-size: 2rem;
-    line-height: 1;
-  }
-  .tip {
-    width: 22.5rem;
-    font-size: 1.125rem;
-    margin-top: 1em;
-    margin-bottom: 2.5rem;
+  margin-bottom: 12rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  @media screen and (max-width: theme.$xl) {
+    margin-bottom: 6rem;
   }
   .content {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    width: $content-width;
+    display: flex;
+    justify-content: center;
     gap: 1.25rem;
+    flex-wrap: wrap;
     .item {
+      width: 18.4375rem;
       height: 7.5rem;
       position: relative;
       transform-style: preserve-3d;
@@ -360,26 +718,54 @@ $letter-spacing: -0.02rem;
         position: absolute;
         inset: 1px;
         border-radius: 1.25rem;
-        text-align: center;
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 1.25rem;
         cursor: pointer;
         backface-visibility: hidden;
-        border: 1px solid #d0d8c7;
       }
       .front {
+        border: 1px solid #6f7071;
         background-color: $primary-color;
+        > svg {
+          height: 100%;
+          width: 100%;
+        }
       }
       .back {
         background-color: $second-primary-color;
         transform: rotateY(180deg);
+        padding: 1.25rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.125rem;
+        font-weight: 400;
+        white-space: pre-wrap;
+        font-family: lota-light;
       }
       &.hover {
         transform: perspective(500px) rotateY(180deg);
+      }
+    }
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.125rem;
+    .title {
+      font-size: 4rem;
+      line-height: 1;
+      font-family: abc-bold;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 4.5rem;
+      }
+    }
+    .tip {
+      width: 32.75rem;
+      font-size: 1.125rem;
+      text-align: center;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 2rem;
       }
     }
   }
@@ -415,8 +801,9 @@ $letter-spacing: -0.02rem;
       text-align: center;
       margin-bottom: 2.5rem;
       .title {
-        font-size: 2rem;
+        font-size: 4rem;
         line-height: 1;
+        font-family: abc-bold;
       }
       .tip {
         font-size: 1.125rem;
@@ -480,20 +867,88 @@ $letter-spacing: -0.02rem;
 
 /**路线图 */
 .main-roadmap {
+  width: $wrapper-width;
+  padding-bottom: 15.625rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3.75rem;
+  position: relative;
+  @media screen and (max-width: theme.$xl) {
+    padding-bottom: 9.375rem;
+  }
+  .clouds {
+    > img {
+      position: absolute;
+    }
+    .cl1 {
+      top: 0%;
+      left: 6%;
+      width: 5.4375rem;
+    }
+    .cl2 {
+      top: 3%;
+      left: 0%;
+      width: 11.8125rem;
+    }
+    .cl3 {
+      top: 40%;
+      left: 8%;
+      width: 5.75rem;
+    }
+    .cl4 {
+      top: 44%;
+      left: 6%;
+      width: 9.6875rem;
+    }
+    .cl5 {
+      top: 65%;
+      left: 0%;
+      width: 8.375rem;
+    }
+    .cr1 {
+      top: 20%;
+      right: 0%;
+      width: 5.625rem;
+    }
+    .cr2 {
+      top: 21%;
+      right: 7%;
+      width: 15.0625rem;
+    }
+    .cr3 {
+      top: 58%;
+      right: 0%;
+      width: 14.25rem;
+    }
+    .cr4 {
+      top: 92%;
+      right: 2%;
+      width: 12.3125rem;
+    }
+    .dc1 {
+      top: 36%;
+      left: 0%;
+      width: 6.375rem;
+      animation: 1.8s ease-in-out infinite alternate wave;
+    }
+    .dc2 {
+      top: 32%;
+      right: 1%;
+      width: 5.75rem;
+      animation: 1.8s ease-in-out infinite alternate wave;
+    }
+  }
   .roadmap-list {
     position: relative;
     $cloud-width: 5.25rem; //云朵宽度
     $cloud-height: 4rem; //云朵高度
     $cloud-background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PScwIDAgOTIgNzAnIGZpbGw9J25vbmUnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHBhdGggZD0nTTg1LjQ3NjYgNDUuNTQ5NkM4My40OTMxIDUwLjEyNyA3NS43Njc0IDUxLjI5NTcgNjkuMjM4MiA1MS40NzAzQzY1LjUxNTYgNTEuNTY5OCA2My41NjkzIDUzLjQxODQgNjMuMDc3IDU3LjEwOTZDNjIuNDI3MyA2MS45ODExIDU3LjI4NTggNjMuOTYwNiA1Mi40OTE2IDYzLjc2NTlDNDcuNDk0IDYzLjU2MyA0Mi4wMDUyIDYwLjU2MiA0MC4zNjk3IDU1Ljk1NDhDMzkuNjA5OSA1My44MTQ2IDQwLjAwNzkgNTcuODgzNiA0MC4wMzkzIDU4LjU4MjhDNDAuMjMyNiA2Mi44ODM2IDMzLjk4MiA2My44Mjc0IDMwLjU3OTIgNjMuNDIwM0MyNi4yMzQyIDYyLjkwMDQgMjMuNjM3MyA2MC42NDYyIDIyLjM5MTMgNTYuNzIxM0MyMi4wNjIgNTUuNjg0MSAyMS42OTk0IDU0LjUzMjkgMjEuOTQ2NCA1My40NDQ5QzIwLjg4NjQgNTQuOTI0OCAxOS40OTUzIDU2LjA5MDQgMTcuNDY2OSA1Ni4yNDQ1QzEyLjUzNTIgNTYuNjE5MiA3LjYxOTAzIDU0LjM0NTIgNi42NDU4NyA0OS41MjA1QzUuODkyNzUgNDUuNzg2NyA3LjA5NTA3IDQyLjI5MDYgOC44OTk5MyAzOC45NjQyQzExLjc4OTkgMzMuNjM4MSAxNS44NDcyIDMzLjczODMgMTQuNDA3NCAyNy44NTIxQzExLjM4NTIgMTUuNDk2MyAyOS43NDM2IDUuMjAwNzEgNDIuMzgyNCA2LjEzNzg3QzQ4LjQxNjUgNi41ODUzMSA1Ni45MDA1IDcuNjEyNzYgNjIuMTc1IDEwLjU3NzdDNjUuMzkzOCAxMi4zODcxIDY4LjEzMjMgMTUuNTUyMyA2OS45NjI0IDE4LjI2NDJDNzEuMDI5MiAxOS44NDUgNzAuOTg2MyAyNC4zNzExIDcyLjc0MTMgMjUuMTE3NUw3Mi44NzkgMjUuMTc2MUM3NS45NTU4IDI2LjQ4NDUgNzguNjU0NCAyNy42MzIyIDgxLjI2MTIgMjkuNzkzOUM4My43NTk3IDMxLjg2NTkgODUuOTAyIDMzLjc5NzIgODYuMDc2NyAzNy4wNjc5Qzg2LjIyMDEgMzkuNzUyMSA4Ni41ODc0IDQyLjk4NjEgODUuNDc2NiA0NS41NDk2WicgZmlsbD0nI0Y1RjVGNycgc3Ryb2tlPScjRjVGNUY3JyBzdHJva2Utd2lkdGg9JzEwLjkzNDcnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjwvc3ZnPg==");
     $cloud-background-image-on: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PScwIDAgOTIgNzAnIGZpbGw9J25vbmUnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHBhdGggZD0nTTg1LjQ3NjYgNDUuNTQ5NkM4My40OTMxIDUwLjEyNyA3NS43Njc0IDUxLjI5NTcgNjkuMjM4MiA1MS40NzAzQzY1LjUxNTYgNTEuNTY5OCA2My41NjkzIDUzLjQxODQgNjMuMDc3IDU3LjEwOTZDNjIuNDI3MyA2MS45ODExIDU3LjI4NTggNjMuOTYwNiA1Mi40OTE2IDYzLjc2NTlDNDcuNDk0IDYzLjU2MyA0Mi4wMDUyIDYwLjU2MiA0MC4zNjk3IDU1Ljk1NDhDMzkuNjA5OSA1My44MTQ2IDQwLjAwNzkgNTcuODgzNiA0MC4wMzkzIDU4LjU4MjhDNDAuMjMyNiA2Mi44ODM2IDMzLjk4MiA2My44Mjc0IDMwLjU3OTIgNjMuNDIwM0MyNi4yMzQyIDYyLjkwMDQgMjMuNjM3MyA2MC42NDYyIDIyLjM5MTMgNTYuNzIxM0MyMi4wNjIgNTUuNjg0MSAyMS42OTk0IDU0LjUzMjkgMjEuOTQ2NCA1My40NDQ5QzIwLjg4NjQgNTQuOTI0OCAxOS40OTUzIDU2LjA5MDQgMTcuNDY2OSA1Ni4yNDQ1QzEyLjUzNTIgNTYuNjE5MiA3LjYxOTAzIDU0LjM0NTIgNi42NDU4NyA0OS41MjA1QzUuODkyNzUgNDUuNzg2NyA3LjA5NTA3IDQyLjI5MDYgOC44OTk5MyAzOC45NjQyQzExLjc4OTkgMzMuNjM4MSAxNS44NDcyIDMzLjczODMgMTQuNDA3NCAyNy44NTIxQzExLjM4NTIgMTUuNDk2MyAyOS43NDM2IDUuMjAwNzEgNDIuMzgyNCA2LjEzNzg3QzQ4LjQxNjUgNi41ODUzMSA1Ni45MDA1IDcuNjEyNzYgNjIuMTc1IDEwLjU3NzdDNjUuMzkzOCAxMi4zODcxIDY4LjEzMjMgMTUuNTUyMyA2OS45NjI0IDE4LjI2NDJDNzEuMDI5MiAxOS44NDUgNzAuOTg2MyAyNC4zNzExIDcyLjc0MTMgMjUuMTE3NUw3Mi44NzkgMjUuMTc2MUM3NS45NTU4IDI2LjQ4NDUgNzguNjU0NCAyNy42MzIyIDgxLjI2MTIgMjkuNzkzOUM4My43NTk3IDMxLjg2NTkgODUuOTAyIDMzLjc5NzIgODYuMDc2NyAzNy4wNjc5Qzg2LjIyMDEgMzkuNzUyMSA4Ni41ODc0IDQyLjk4NjEgODUuNDc2NiA0NS41NDk2WicgZmlsbD0nI0ZGNEMzMycgc3Ryb2tlPScjRkY0QzMzJyBzdHJva2Utd2lkdGg9JzEwLjkzNDcnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjwvc3ZnPg==");
+    $cloud-background-image-half-on: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB2aWV3Qm94PSIwIDAgOTYgNzMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik04Ni40NjI0IDQ3LjA1MTNDODQuNDc4OSA1MS42Mjg3IDc2Ljc1MzIgNTIuNzk3NCA3MC4yMjQgNTIuOTcyQzY2LjUwMTQgNTMuMDcxNSA2NC41NTUyIDU0LjkyMDEgNjQuMDYyOSA1OC42MTEzQzYzLjQxMzIgNjMuNDgyOCA1OC4yNzE3IDY1LjQ2MjMgNTMuNDc3NCA2NS4yNjc2QzQ4LjQ3OTggNjUuMDY0NyA0Mi45OTEgNjIuMDYzNyA0MS4zNTU1IDU3LjQ1NjVDNDAuNTk1NyA1NS4zMTY0IDQwLjk5MzcgNTkuMzg1MyA0MS4wMjUxIDYwLjA4NDVDNDEuMjE4NCA2NC4zODUzIDM0Ljk2NzkgNjUuMzI5MSAzMS41NjUxIDY0LjkyMkMyNy4yMiA2NC40MDIxIDI0LjYyMzIgNjIuMTQ3OSAyMy4zNzcxIDU4LjIyMzFDMjMuMDQ3OCA1Ny4xODU4IDIyLjY4NTIgNTYuMDM0NiAyMi45MzIyIDU0Ljk0NjZDMjEuODcyMiA1Ni40MjY2IDIwLjQ4MTIgNTcuNTkyMSAxOC40NTI3IDU3Ljc0NjJDMTMuNTIxIDU4LjEyMDkgOC42MDQ4NyA1NS44NDcgNy42MzE3MSA1MS4wMjIyQzYuODc4NTkgNDcuMjg4NCA4LjA4MDkxIDQzLjc5MjMgOS44ODU3NyA0MC40NjZDMTIuNzc1NyAzNS4xMzk4IDE2LjgzMzEgMzUuMjQgMTUuMzkzMyAyOS4zNTM4QzEyLjM3MSAxNi45OTggMzAuNzI5NSA2LjcwMjQyIDQzLjM2ODIgNy42Mzk1OEM0OS40MDI0IDguMDg3MDIgNTcuODg2NCA5LjExNDQ3IDYzLjE2MDggMTIuMDc5NEM2Ni4zNzk2IDEzLjg4ODggNjkuMTE4MSAxNy4wNTQgNzAuOTQ4MiAxOS43NjU5QzcyLjAxNSAyMS4zNDY3IDcxLjk3MjIgMjUuODcyOCA3My43MjcxIDI2LjYxOTJMNzMuODY0OSAyNi42Nzc4Qzc2Ljk0MTYgMjcuOTg2MiA3OS42NDAzIDI5LjEzMzkgODIuMjQ3MSAzMS4yOTU2Qzg0Ljc0NTYgMzMuMzY3NiA4Ni44ODc5IDM1LjI5OSA4Ny4wNjI2IDM4LjU2OTZDODcuMjA1OSA0MS4yNTM4IDg3LjU3MzMgNDQuNDg3OCA4Ni40NjI0IDQ3LjA1MTNaIiBmaWxsPSIjRjVGNUY3IiBzdHJva2U9IiNGNUY1RjciIHN0cm9rZS13aWR0aD0iMTAuOTM0NyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxtYXNrIGlkPSJtYXNrMF8xMjdfNzAwMCIgc3R5bGU9Im1hc2stdHlwZTphbHBoYSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMSIgeT0iMiIgd2lkdGg9IjkyIiBoZWlnaHQ9IjY5Ij4KPHBhdGggZD0iTTg2LjQ2MjQgNDcuMDUxM0M4NC40Nzg5IDUxLjYyODcgNzYuNzUzMiA1Mi43OTc0IDcwLjIyNCA1Mi45NzJDNjYuNTAxNCA1My4wNzE1IDY0LjU1NTIgNTQuOTIwMSA2NC4wNjI5IDU4LjYxMTNDNjMuNDEzMiA2My40ODI4IDU4LjI3MTcgNjUuNDYyMyA1My40Nzc0IDY1LjI2NzZDNDguNDc5OCA2NS4wNjQ3IDQyLjk5MSA2Mi4wNjM3IDQxLjM1NTUgNTcuNDU2NUM0MC41OTU3IDU1LjMxNjQgNDAuOTkzNyA1OS4zODUzIDQxLjAyNTEgNjAuMDg0NUM0MS4yMTg0IDY0LjM4NTMgMzQuOTY3OSA2NS4zMjkxIDMxLjU2NTEgNjQuOTIyQzI3LjIyIDY0LjQwMjEgMjQuNjIzMiA2Mi4xNDc5IDIzLjM3NzEgNTguMjIzMUMyMy4wNDc4IDU3LjE4NTggMjIuNjg1MiA1Ni4wMzQ2IDIyLjkzMjIgNTQuOTQ2NkMyMS44NzIyIDU2LjQyNjYgMjAuNDgxMiA1Ny41OTIxIDE4LjQ1MjcgNTcuNzQ2MkMxMy41MjEgNTguMTIwOSA4LjYwNDg3IDU1Ljg0NyA3LjYzMTcxIDUxLjAyMjJDNi44Nzg1OSA0Ny4yODg0IDguMDgwOTEgNDMuNzkyMyA5Ljg4NTc3IDQwLjQ2NkMxMi43NzU3IDM1LjEzOTggMTYuODMzMSAzNS4yNCAxNS4zOTMzIDI5LjM1MzhDMTIuMzcxIDE2Ljk5OCAzMC43Mjk1IDYuNzAyNDIgNDMuMzY4MiA3LjYzOTU4QzQ5LjQwMjQgOC4wODcwMiA1Ny44ODY0IDkuMTE0NDcgNjMuMTYwOCAxMi4wNzk0QzY2LjM3OTYgMTMuODg4OCA2OS4xMTgxIDE3LjA1NCA3MC45NDgyIDE5Ljc2NTlDNzIuMDE1IDIxLjM0NjcgNzEuOTcyMiAyNS44NzI4IDczLjcyNzEgMjYuNjE5Mkw3My44NjQ5IDI2LjY3NzhDNzYuOTQxNiAyNy45ODYyIDc5LjY0MDMgMjkuMTMzOSA4Mi4yNDcxIDMxLjI5NTZDODQuNzQ1NiAzMy4zNjc2IDg2Ljg4NzkgMzUuMjk5IDg3LjA2MjYgMzguNTY5NkM4Ny4yMDU5IDQxLjI1MzggODcuNTczMyA0NC40ODc4IDg2LjQ2MjQgNDcuMDUxM1oiIGZpbGw9IiNGNUY1RjciIHN0cm9rZT0iI0Y1RjVGNyIgc3Ryb2tlLXdpZHRoPSIxMC45MzQ3IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9tYXNrPgo8ZyBtYXNrPSJ1cmwoI21hc2swXzEyN183MDAwKSI+CjxyZWN0IHk9IjM3LjUiIHdpZHRoPSI5NiIgaGVpZ2h0PSIzNSIgZmlsbD0iI0ZGNEMzMyIvPgo8L2c+Cjwvc3ZnPg==");
     width: $content-width;
     display: grid;
     grid-template-columns: 1fr $cloud-width 1fr;
-    align-items: flex-end;
     gap: 1.25rem;
     padding-top: 2.5rem;
     .roadmap-rod {
@@ -501,7 +956,7 @@ $letter-spacing: -0.02rem;
       bottom: 0;
       width: 1.25rem;
       height: 100%;
-      background-color: $font-color;
+      background-color: #323233;
       border-radius: 0.5rem;
       margin-left: 50%;
       transform: translateX(-50%);
@@ -516,12 +971,70 @@ $letter-spacing: -0.02rem;
     .roadmap-item {
       position: relative;
       display: flex;
-      align-items: center;
       gap: 1.25rem;
       cursor: pointer;
+      .item-content {
+        padding: 3rem 1.5rem 1rem 1.5rem;
+        border-radius: 1.25rem;
+        background-color: $font-color;
+        color: $primary-color;
+        position: relative;
+        .label {
+          position: absolute;
+          top: -4.3125rem;
+          width: 13.9375rem;
+          height: 7.3125rem;
+          .label-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+          }
+          .label-content {
+            position: relative;
+            width: 100%;
+            top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            .icon {
+              width: 3.125rem;
+              height: 3.125rem;
+              border-radius: 6.25rem;
+              background-color: $primary-color;
+              grid-row: span 2;
+              > svg {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .time {
+              font-size: 2rem;
+              font-family: lota-Bold;
+              line-height: 1;
+              color: $font-color;
+              &.off {
+                color: $primary-color;
+              }
+            }
+          }
+        }
+        .description {
+          position: relative;
+          font-size: 1.125rem;
+          line-height: 2.025rem;
+          ul {
+            margin: 0;
+            padding-inline-start: 2rem;
+          }
+        }
+      }
       &:nth-child(2n + 1) {
         grid-column: span 2;
         justify-content: flex-end;
+        .item-content .label {
+          right: 0;
+        }
         &::after {
           content: "";
         }
@@ -530,128 +1043,175 @@ $letter-spacing: -0.02rem;
         grid-column-start: 2;
         grid-column-end: span 2;
         justify-content: flex-start;
+        .item-content .label {
+          left: 0;
+        }
         &::before {
           content: "";
         }
       }
       &::before,
       &::after {
+        flex-shrink: 0;
         display: block;
         width: $cloud-width;
         height: $cloud-height;
         background-image: $cloud-background-image;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        top: -4.25rem;
       }
       &.on::before,
       &.on::after {
         background-image: $cloud-background-image-on;
       }
-      .item-content {
-        padding: 1rem;
-        border-radius: 1.25rem;
-        background-color: $font-color;
-        color: $primary-color;
-        display: grid;
-        grid-row-gap: 0.5rem;
-        grid-column-gap: 1.5rem;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto 1fr;
-        .icon {
-          width: 3.75rem;
-          height: 3.75rem;
-          border-radius: 0.625rem;
-          background-color: $primary-color;
-          grid-row: span 2;
-          &.on {
-            background-color: $second-primary-color;
+      &.half-on::before,
+      &.half-on::after {
+        background-image: $cloud-background-image-half-on;
+      }
+    }
+    @media screen and (max-width: theme.$xl) {
+      $cloud-width: 6rem; //云朵宽度
+      $cloud-height: 4.5625rem; //云朵高度
+      grid-template-columns: 1fr;
+      row-gap: 10.5625rem;
+      column-gap: 2.25rem;
+      .roadmap-rod {
+        width: 1.5rem;
+        border-radius: 1.5rem;
+        margin-left: calc($cloud-width/2);
+        .progress {
+          border-radius: 1.5rem;
+        }
+      }
+      .roadmap-item {
+        .item-content {
+          width: 100%;
+          .label {
+            .label-content {
+              font-size: 2.5rem;
+            }
+          }
+          .description {
+            font-size: 1.75rem;
+            line-height: 3.15rem;
           }
         }
-        .time {
-          font-size: 1.5rem;
-          line-height: 1;
+        &:nth-child(n) {
+          grid-column-start: 1;
+          justify-content: flex-start;
+          grid-column-end: 1;
+          .item-content .label {
+            left: 0;
+          }
+          &::before {
+            content: "";
+            position: relative;
+            top: -4.25rem;
+          }
+          &::after {
+            content: normal;
+          }
         }
-        .description {
-          font-size: 1.125rem;
-          width: 11.25rem;
-          white-space: pre-line;
+        &::before {
+          width: $cloud-width;
+          height: $cloud-height;
         }
       }
     }
   }
   .info {
-    width: 13.125rem;
     text-align: center;
     .title {
-      font-size: 2rem;
+      font-size: 4rem;
       line-height: 1;
       margin-bottom: 1.125rem;
+      font-family: abc-bold;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 4.5rem;
+      }
     }
     .tip {
       font-size: 1.125rem;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 2rem;
+      }
     }
   }
 }
 
 /**顶部时钟 */
 .main-top {
-  width: 42.5rem;
   margin-bottom: 12.5rem;
-  margin-top: 10rem;
+  margin-top: 2.5rem;
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 1.75rem;
-  .top-icon {
-    > svg {
-      height: 2.5rem;
-    }
+  @media screen and (max-width: theme.$xl) {
+    gap: 3rem;
   }
-  .top-title {
-    width: 27.5rem;
-    font-size: 2rem;
-    line-height: 1;
-    text-align: center;
+  .top-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+    @media screen and (max-width: theme.$xl) {
+      gap: 2rem;
+    }
+    .top-title {
+      width: 27.5rem;
+      font-size: 2.25rem;
+      line-height: 1;
+      text-align: center;
+      @media screen and (max-width: theme.$xl) {
+        width: $content-width;
+        font-size: 3rem;
+        font-family: lota-Bold;
+      }
+    }
+    .top-tip {
+      font-size: 1.125rem;
+      line-height: 1;
+      color: $font-color;
+      text-align: center;
+      opacity: 0.26;
+      @media screen and (max-width: theme.$xl) {
+        font-size: 2rem;
+      }
+    }
   }
   .top-content {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto auto;
     gap: 1.25rem;
     padding: 1.25rem;
     background-color: $second-primary-color;
     border-radius: 1.25rem;
+    @media screen and (max-width: theme.$xl) {
+      width: calc($content-width - 2.5rem);
+    }
     .item {
       padding: 2.5rem 1.25rem;
-      font-size: 3.75rem;
+      font-size: 5rem;
       line-height: 0.9;
       background-color: $primary-color;
       border-radius: 1.25rem;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .top-action {
-      grid-column: span 3;
-      > button {
-        width: 100%;
-        padding: 1rem 1.25rem;
-        background-color: #ffffff;
-        border-radius: 12.5rem;
-        display: flex;
-        justify-content: center;
-        gap: 0.25rem;
-        cursor: pointer;
-        border: unset;
-        font-family: lota-regular;
-        > span {
-          font-size: 1.75rem;
-        }
+      &.no-clock {
+        grid-column: span 3;
+        padding: 2.5rem 5rem;
+        text-align: center;
+        white-space: nowrap;
       }
     }
   }
-  .top-tip {
-    font-size: 1.125rem;
-    line-height: 1;
-    color: $font-color;
-    text-align: center;
-  }
+}
+
+/**顶部标题 */
+.main-title {
+  width: $wrapper-width;
 }

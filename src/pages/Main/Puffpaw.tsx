@@ -1,31 +1,29 @@
 export default function Puffpaw() {
   return (
     <div
+      className="main-puffpaw"
       style={{
         display: "inline-block",
         position: "relative",
       }}
     >
       <div
+        className="tip"
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%,-50%) rotate(-11deg)",
-          padding: "1.25rem",
           backgroundColor: "#FF4C33",
-          borderRadius: "1.25rem",
           color: "#F5F5F7",
-          fontSize: "2rem",
           lineHeight: 1,
           cursor: "default",
         }}
       >
-        Up Only☝️
+        Up Only<span>☝️</span>
       </div>
       <svg
-        width="77.625rem"
-        height="13.0625rem"
+        width="100%"
         viewBox="0 0 1242 209"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

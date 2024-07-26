@@ -1,0 +1,24 @@
+@use "../theme.scss" as theme;
+@import url("../../../theme/font.scss");
+
+.mint-wrapper {
+    background-color: theme.$base-color;
+    height: 100vh;
+    letter-spacing: -0.02rem;
+    line-height: 1.2;
+    color: theme.$font-color;
+    font-family: lota-regular;
+}
+.mint {
+    width: 100vw;
+    height: calc(100vh - theme.$header-height);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px -1px theme.$border-color;
+}
+
+.mint-wraper {
+    width: 100vw;
+    padding-bottom: 2.5rem;
+}

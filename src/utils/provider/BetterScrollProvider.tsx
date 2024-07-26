@@ -1,6 +1,7 @@
 import { BScrollConstructor } from "@better-scroll/core/dist/types/BScroll";
 import { useEffect, useRef } from "react";
 import BScroll from "../bscroll";
+import { MediaWidth } from "@/theme/themeConfig";
 
 export default function BetterScrollProvider({
   children,
@@ -8,7 +9,6 @@ export default function BetterScrollProvider({
   children: JSX.Element;
 }) {
   const wrapper = useRef(null);
-  const wrapperBody = useRef(null);
   const bs = useRef<BScrollConstructor>();
 
   useEffect(() => {
@@ -22,22 +22,12 @@ export default function BetterScrollProvider({
         nestedScroll: {
           groupId: "all",
         },
+        observeDOM: true,
+        observeImage: true,
+        click: true,
+        useTransition: window.screen.width > MediaWidth.xl,
       });
       window.bs = bs.current;
-    }
-
-    // 通过尺寸变化来触发refresh
-    if (bs.current && wrapperBody.current) {
-      const resizeObserver = new ResizeObserver(() => {
-        bs.current?.refresh();
-      });
-      resizeObserver.observe(wrapperBody.current);
-      return () => {
-        resizeObserver.disconnect();
-        bs.current?.destroy();
-        bs.current = undefined;
-        window.bs = undefined;
-      };
     }
   }, []);
 
@@ -50,7 +40,7 @@ export default function BetterScrollProvider({
         overflow: "hidden",
       }}
     >
-      <div ref={wrapperBody}>{children}</div>
+      <div>{children}</div>
     </div>
   );
 }
